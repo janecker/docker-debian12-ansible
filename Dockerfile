@@ -1,9 +1,9 @@
-FROM debian:bullseye
-LABEL maintainer="Jeff Geerling"
+FROM debian:bookworm-slim
+LABEL maintainer="Jan Philipp Ecker"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV pip_packages "ansible cryptography"
+ENV pip_packages "ansible ansible-lint cryptography"
 
 # Install dependencies.
 RUN apt-get update \
@@ -17,10 +17,10 @@ RUN apt-get update \
     && apt-get clean
 
 # Upgrade pip to latest version.
-RUN pip3 install --upgrade pip
+RUN pip3 install --break-system-packages --upgrade pip
 
 # Install Ansible via pip.
-RUN pip3 install $pip_packages
+RUN pip3 install --break-system-packages $pip_packages
 
 COPY initctl_faker .
 RUN chmod +x initctl_faker && rm -fr /sbin/initctl && ln -s /initctl_faker /sbin/initctl
